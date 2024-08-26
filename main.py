@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
@@ -21,7 +23,7 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/authors/", response_model=list(schemas.Author))
+@app.get("/authors/", response_model=List[schemas.Author])
 def get_authors(
         skip: int | None = 0,
         limit: int | None = 10,
@@ -40,7 +42,7 @@ def create_author(author: schemas.AuthorCreate, db: Session = Depends(get_db)):
     return crud.create_author(db=db, author=author)
 
 
-@app.get("/books/", response_model=list[schemas.Book])
+@app.get("/books/", response_model=List[schemas.Book])
 def get_books(
         skip: int = 0,
         limit: int = 10,
@@ -49,8 +51,8 @@ def get_books(
     return crud.get_all_books(db=db, skip=skip, limit=limit)
 
 
-@app.get("/books/{author_id}/", response_model=list(schemas.Book))
-def get_book_by_author_id(author_id: int, db: Depends(get_db)):
+@app.get("/books/{author_id}/", response_model=list[schemas.Book])
+def get_book_by_author_id(author_id: int, db: Session = Depends(get_db)):
     return crud.get_all_books(author_id=author_id, db=db)
 
 

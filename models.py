@@ -21,4 +21,4 @@ class Book(Base):
     summary = Column(String(511), nullable=False)
     publication_date = Column(Date, nullable=False)
     author_id = Column(Integer, ForeignKey("authors.id"))
-
+    author = relationship("Author", back_populates="books")

@@ -31,6 +31,7 @@ class BookCreate(BookBase):
 
 class Book(BookBase):
     id: int
+    author: Author
 
     class Config:
         orm_mode = True
