@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from models import Author, Book
@@ -7,7 +8,7 @@ import schemas
 
 
 def get_all_authors(db: Session, skip: int = 0, limit: int = 10) -> List[Author]:
-    return db.query(Author).offset(skip).limit(limit).all()
+    return db.execute(select(Author).offset(skip).limit(limit)).scalars().all()
 
 
 def create_author(db: Session, author: schemas.AuthorCreate) -> Author:
@@ -23,7 +24,7 @@ def create_author(db: Session, author: schemas.AuthorCreate) -> Author:
 
 
 def get_author_by_id(db: Session, author_id: int) -> Optional[Author]:
-    return db.query(Author).filter(Author.id == author_id).first()
+    return db.execute(select(Author).filter_by(id=author_id)).scalar_one_or_none()
 
 
 def get_all_books(
@@ -32,10 +33,10 @@ def get_all_books(
         skip: int = 0,
         limit: int = 10
 ) -> List[Book]:
-    query = db.query(Book)
+    query = select(Book)
     if author_id:
-        query = query.filter(Author.id == author_id)
-    return query.offset(skip).limit(limit).all()
+        query = query.filter(Book.author_id == author_id)
+    return db.execute(query.offset(skip).limit(limit)).scalars().all()
 
 
 def create_book(db: Session, book: schemas.BookCreate) -> Book:

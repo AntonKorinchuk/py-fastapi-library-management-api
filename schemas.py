@@ -15,8 +15,9 @@ class AuthorCreate(AuthorBase):
 class Author(AuthorBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 
 
 class BookBase(BaseModel):
@@ -33,5 +34,6 @@ class Book(BookBase):
     id: int
     author: Author
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
